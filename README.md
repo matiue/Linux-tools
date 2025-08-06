@@ -1,6 +1,6 @@
 # Repo for my Linux tools
 
-## temp-zram:
+## [temp-zram](https://github.com/matiue/Linux-tools/blob/main/temp-zram.sh):
 script to activate zram temporary, considering:
 1. For my setup there is no swap availabe and zram is used instead.
 2. It will increase swappiness to make sure OOM killer wont work and make system more responsible.
