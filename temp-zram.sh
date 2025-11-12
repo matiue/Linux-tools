@@ -13,34 +13,31 @@ echo "Setting up temporary ZRAM swap..."
 # Load the zram kernel module
 modprobe zram || { echo "ERROR: Failed to load zram module."; exit 1; }
 
-# Calculate total RAM in KiB and use it as ZRAM size
-# Note: This sets ZRAM size to 100% of your RAM. You might prefer 50% for typical use.
+# --- Gather total system memory ---
 TOTAL_RAM_KB=$(grep -Po 'MemTotal:\s*\K\d+' /proc/meminfo)
 if [[ -z "$TOTAL_RAM_KB" ]]; then
-    echo "ERROR: Could not determine total RAM. Exiting."
+    echo "ERROR: Could not determine total RAM."
     exit 1
 fi
 
-# Calculate memory limit (75% of total RAM)
-MEM_LIMIT_BYTES=$((TOTAL_RAM_KB * 1024 * 75 / 100))
+# --- Calculate parameters (in KiB) ---a
+MEM_LIMIT_KB=$((TOTAL_RAM_KB * 75 / 100))   # 75% of RAM
+ZRAM_LOGICAL_SIZE_KB=$((MEM_LIMIT_KB * 4))  # 4× memory limit
 
-# Calculate ZRAM logical size (4× memory limit)
-ZRAM_LOGICAL_SIZE_KB=$((MEM_LIMIT_BYTES / 1024 * 4))
+echo "Total RAM:           ${TOTAL_RAM_KB} KiB"
+echo "ZRAM mem_limit:      ${MEM_LIMIT_KB} KiB (≈75% of RAM)"
+echo "ZRAM logical size:   ${ZRAM_LOGICAL_SIZE_KB} KiB (4× limit)"
 
+# --- Configure /dev/zram0 ---
+echo ">>> Configuring /dev/zram0..."
+zramctl /dev/zram0 --algorithm lz4 --size "${ZRAM_LOGICAL_SIZE_KB}KiB"
 
-echo "Total RAM: $TOTAL_RAM_KB KiB"
-echo "Memory limit for ZRAM: $MEM_LIMIT_BYTES bytes (75% of RAM)"
-echo "ZRAM logical size: $ZRAM_LOGICAL_SIZE_KB KiB (4× mem limit)"
-
-# Configure and activate ZRAM
-zramctl /dev/zram0 --algorithm lz4 --size "${ZRAM_LOGICAL_SIZE_KB}KiB" || { echo "ERROR: Failed to configure ZRAM device."; exit 1; }
-
-
-# Set memory limit
+# --- Optional: set memory limit if supported ---
 if [[ -f /sys/block/zram0/mem_limit ]]; then
-    echo "$MEM_LIMIT_BYTES" > /sys/block/zram0/mem_limit || { echo "ERROR: Failed to set mem_limit."; exit 1; }
+    echo "${MEM_LIMIT_KB}K" > /sys/block/zram0/mem_limit || {
+        echo "WARNING: Could not set mem_limit (kernel may not support it)."
+    }
 fi
-
 
 # Format as swap and enable
 mkswap -U clear /dev/zram0 || { echo "ERROR: Failed to format ZRAM device."; exit 1; }
