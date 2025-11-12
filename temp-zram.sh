@@ -21,8 +21,28 @@ if [[ -z "$TOTAL_RAM_KB" ]]; then
     exit 1
 fi
 
+# Calculate memory limit (75% of total RAM)
+MEM_LIMIT_BYTES=$((TOTAL_RAM_KB * 1024 * 75 / 100))
+
+# Calculate ZRAM logical size (4× memory limit)
+ZRAM_LOGICAL_SIZE_KB=$((MEM_LIMIT_BYTES / 1024 * 4))
+
+
+echo "Total RAM: $TOTAL_RAM_KB KiB"
+echo "Memory limit for ZRAM: $MEM_LIMIT_BYTES bytes (75% of RAM)"
+echo "ZRAM logical size: $ZRAM_LOGICAL_SIZE_KB KiB (4× mem limit)"
+
 # Configure and activate ZRAM
-zramctl /dev/zram0 --algorithm zstd --size "${TOTAL_RAM_KB}KiB" || { echo "ERROR: Failed to configure ZRAM device."; exit 1; }
+zramctl /dev/zram0 --algorithm lz4 --size "${ZRAM_LOGICAL_SIZE_KB}KiB" || { echo "ERROR: Failed to configure ZRAM device."; exit 1; }
+
+
+# Set memory limit
+if [[ -f /sys/block/zram0/mem_limit ]]; then
+    echo "$MEM_LIMIT_BYTES" > /sys/block/zram0/mem_limit || { echo "ERROR: Failed to set mem_limit."; exit 1; }
+fi
+
+
+# Format as swap and enable
 mkswap -U clear /dev/zram0 || { echo "ERROR: Failed to format ZRAM device."; exit 1; }
 swapon --discard --priority 100 /dev/zram0 || { echo "ERROR: Failed to enable ZRAM swap."; exit 1; }
 
