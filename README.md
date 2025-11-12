@@ -12,3 +12,5 @@ Just a script to activate zram temporary, considering:
 
 
 As I dont wanna have disk i/o I did not activate the writeback option (it writes incompressible pages into backing device BUT it can be automated to do it with cold pages with a cron). even activating it may be a better choice than storage swap files,and has less disk i/o.
+
+on my last check up (kernel 6.17.7) the recompression setting is not triggered atomic, it is a onetime trigger.(a cron can be a good setup for idle and huge pages to compress with a higher compress ratio)
