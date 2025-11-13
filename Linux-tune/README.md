@@ -2,6 +2,12 @@ linux tune
 
 
 # Repo for my Linux tuning
+- [x] Desktop tuning
+- [ ] Web server tuining
+- [ ] Postgress server tuning
+- [ ] ML server tuning
+- ...?
+
 
 ## [temp-tune-desktop](https://github.com/matiue/Linux-tools/blob/main/Linux-tune/temp-tune-desktop.sh):
 Just a script to activate zram temporary, considering:
