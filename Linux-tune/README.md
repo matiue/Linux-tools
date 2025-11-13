@@ -3,7 +3,7 @@ linux tune
 
 # Repo for my Linux tuning
 
-## [temp-zram](https://github.com/matiue/Linux-tools/blob/main/temp-zram.sh):
+## [temp-tune-desktop](https://github.com/matiue/Linux-tools/blob/main/Linux-tune/temp-tune-desktop.sh):
 Just a script to activate zram temporary, considering:
 1. For my setup there is no swap availabe and zram is used instead(I configured it that way intentionally, and also I have decreased the default swapiness) .
 2. It will increase swappiness to make sure OOM killer wont work and make system more responsible.
