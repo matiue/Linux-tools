@@ -2,7 +2,11 @@ linux tune
 
 
 # Repo for my Linux tuning
-- [x] Desktop tuning
+- [ ] Desktop tuning
+    - [x] zram cofig as swap
+    - [x] swapiness at highest amount
+    - [x] disable page-cluster 
+    - [ ] ...
 - [ ] Web server tuining
 - [ ] Postgress server tuning
 - [ ] ML server tuning
