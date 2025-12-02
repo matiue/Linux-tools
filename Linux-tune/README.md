@@ -14,7 +14,11 @@ linux tune
 
 
 ## [temp-tune-desktop](https://github.com/matiue/Linux-tools/blob/main/Linux-tune/temp-tune-desktop.sh):
-Just a script to activate zram temporary, considering:
+Arch linux is always considered as a Raw linux, unlike some other distros arch does not provide any tuning or pre tweak for increasing performance. this script will be a try to do some performance optimization for desktop usage of Arch linux.
+Along side that, it will provude the same scritps for different servers usages in future.
+some considerations:
+
+
 1. For my setup there is no swap availabe and zram is used instead(I configured it that way intentionally, and also I have decreased the default swapiness) .
 2. It will increase swappiness to make sure OOM killer wont work and make system more responsible.
 3. Zram size is as size as memory.
