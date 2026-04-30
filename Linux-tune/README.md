@@ -14,8 +14,7 @@ linux tune
 
 
 ## [temp-tune-desktop](https://github.com/matiue/Linux-tools/blob/main/Linux-tune/temp-tune-desktop.sh):
-Arch linux is always considered as a Raw linux, unlike some other distros arch does not provide any tuning or pre tweak for increasing performance. this script will be a try to do some performance optimization for desktop usage of Arch linux.
-Along side that, it will provude the same scritps for different servers usages in future.
+Arch Linux is often regarded as a "raw" Linux distribution unlike many other distros, it comes without any built-in tuning or performance tweaks. This script is an attempt to introduce performance optimizations tailored for desktop use on Arch Linux. In the future, similar scripts will also be provided for various server use cases.
 some considerations:
 
 
